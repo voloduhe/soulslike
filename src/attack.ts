@@ -17,15 +17,20 @@ function attack(sword: Container, stage: Container<ContainerChild>) {
           rotation: degToRad(attackType === "alt" ? -100 : 20),
         })
         .then(() => {
+          sword.name = "col";
           gsap.to(stage.position, 0.1, { x: "+=20", yoyo: true, repeat: 1 });
           gsap.to(stage.position, 0.1, { x: "-=20", yoyo: true, repeat: 1 });
 
-          gsap.fromTo(
-            sword,
-            0.3,
-            { rotation: degToRad(attackType === "alt" ? -100 : 10) },
-            { rotation: degToRad(attackType === "alt" ? 360 : -360) }
-          );
+          gsap
+            .fromTo(
+              sword,
+              0.3,
+              { rotation: degToRad(attackType === "alt" ? -100 : 10) },
+              { rotation: degToRad(attackType === "alt" ? 360 : -360) }
+            )
+            .then(() => {
+              sword.name = "";
+            });
         });
 
       anim.then(() => {
