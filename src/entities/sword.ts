@@ -2,13 +2,13 @@ import { Container, ContainerChild, DEG_TO_RAD, Graphics } from "pixi.js";
 import gsap from "gsap";
 
 class Sword extends Container {
+  public isCollidable: boolean = false;
+  public isSwing: boolean = false;
+  public attackCount = 0;
   private blade: Graphics;
   private handle: Graphics;
-  public isCollidable: boolean = false;
   private stage: Container<ContainerChild>;
-
   private anim: Promise<gsap.core.Tween> | null = null;
-  private attackCount = 0;
 
   constructor(stage: Container<ContainerChild>) {
     super();
@@ -33,13 +33,14 @@ class Sword extends Container {
   public handleKeyDown(keyEvent: KeyboardEvent) {
     if (keyEvent.code === "Space" && !this.anim) {
       const attackType = this.attackCount % 2 === 0 ? "alt" : "default";
-
+      this.isSwing = true;
       this.anim = gsap
         .to(this, {
           duration: 0.5,
           rotation: (attackType === "alt" ? -100 : 20) * DEG_TO_RAD,
         })
         .then(() => {
+          this.isSwing = false;
           this.isCollidable = true;
           gsap.to(this.stage.position, 0.1, {
             x: "+=20",

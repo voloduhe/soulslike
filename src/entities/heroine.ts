@@ -1,4 +1,6 @@
-import { Assets, Sprite } from "pixi.js";
+import gsap from "gsap";
+import { Assets, Container, ContainerChild, DEG_TO_RAD, Sprite } from "pixi.js";
+import { Sword } from "./sword";
 
 const texture = await Assets.load("../public/koke.png");
 
@@ -13,14 +15,20 @@ const directions: Record<KeyboardEvent["code"], DirType> = {
 class Heroine extends Sprite {
   public hp: number;
   public stamina: number;
+  public sword;
+  private isSwingAnimationRunning = false;
   private speed: number = 5;
   private heldDirections: DirType[] = [];
+  private stage: Container<ContainerChild>;
 
-  constructor() {
+  constructor(stage: Container<ContainerChild>) {
     super(texture);
 
     this.hp = 100;
     this.stamina = 50;
+    this.stage = stage;
+
+    this.sword = new Sword(this.stage);
 
     this.anchor.set(0.5);
 
@@ -47,6 +55,44 @@ class Heroine extends Sprite {
   }
 
   public movement(deltaTime: number) {
+    if (this.sword.isSwing && !this.isSwingAnimationRunning) {
+      this.isSwingAnimationRunning = true;
+      const originalY = this.y;
+      const originalRotation = this.rotation;
+
+      const swingTimeline = gsap
+        .timeline()
+        .to(this, 0.3, {
+          y: originalY - 10,
+          rotation: (this.sword.attackCount % 2 === 0 ? 10 : -10) * DEG_TO_RAD,
+        })
+        .to(this, 0.3, {
+          y: originalY - 15,
+          rotation: (this.sword.attackCount % 2 === 0 ? 15 : -15) * DEG_TO_RAD,
+        })
+        .to(this, 0.1, {
+          y: originalY + 20,
+          rotation: (this.sword.attackCount % 2 === 0 ? -10 : 10) * DEG_TO_RAD,
+        })
+        .to(this, 0.2, {
+          y: originalY,
+          rotation: originalRotation,
+        })
+        .eventCallback("onComplete", () => {
+          this.isSwingAnimationRunning = false;
+        });
+
+      this.sword.once("swingcomplete", () => {
+        swingTimeline.kill();
+        gsap.set(this, { y: originalY, rotation: originalRotation });
+      });
+    }
+
+    this.sword.position = {
+      x: this.position.x + 10,
+      y: this.position.y,
+    };
+
     this.heldDirections.forEach((heldDirection) => {
       if (heldDirection) {
         if (heldDirection === "up") {
