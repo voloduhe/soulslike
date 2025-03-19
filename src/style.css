@@ -15,6 +15,7 @@ body {
 .wasd-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px;
 }
 .key {
   color: white;
@@ -25,6 +26,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 2px;
 }
 .key-gap {
   width: 30px;
@@ -32,6 +34,6 @@ body {
 }
 .space-container {
   div {
-    width: 94px;
+    width: 100%;
   }
 }
