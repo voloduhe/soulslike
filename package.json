@@ -15,6 +15,7 @@
   "dependencies": {
     "@pixi/devtools": "^2.0.1",
     "@pixi/filter-motion-blur": "^5.1.1",
+    "gsap": "^3.12.7",
     "pixi.js": "^8.8.0"
   }
 }
