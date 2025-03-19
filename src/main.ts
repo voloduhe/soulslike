@@ -28,7 +28,7 @@ sword.addChild(handle);
 app.stage.addChild(sword);
 app.stage.addChild(bunny);
 
-attack(sword);
+attack(sword, app.stage);
 app.ticker.add((time) => {
   movement(bunny, time.deltaTime);
   sword.position = { x: bunny.position.x + 10, y: bunny.position.y };
