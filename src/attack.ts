@@ -7,7 +7,7 @@ function attack(sword: Container) {
   let anim: Promise<gsap.core.Tween> | null;
 
   function handleKeyDown(keyEvent: KeyboardEvent) {
-    if (keyEvent.key === " " && !anim) {
+    if (keyEvent.code === "Space" && !anim) {
       anim = gsap
         .to(sword, { duration: 0.5, rotation: degToRad(20) })
         .then(() =>

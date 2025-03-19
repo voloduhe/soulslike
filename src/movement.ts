@@ -1,11 +1,11 @@
 import { Sprite } from "pixi.js";
 
 type DirType = "up" | "down" | "left" | "right";
-const directions: Record<KeyboardEvent["key"], DirType> = {
-  w: "up",
-  a: "left",
-  s: "down",
-  d: "right",
+const directions: Record<KeyboardEvent["code"], DirType> = {
+  KeyW: "up",
+  KeyA: "left",
+  KeyS: "down",
+  KeyD: "right",
 };
 
 const speed: number = 5;
@@ -15,14 +15,14 @@ document.addEventListener("keydown", handleKeyDown);
 document.addEventListener("keyup", handleKeyUp);
 
 function handleKeyDown(keyEvent: KeyboardEvent) {
-  const dir = directions[keyEvent.key];
+  const dir = directions[keyEvent.code];
   if (dir && heldDirections.indexOf(dir) === -1) {
     heldDirections.unshift(dir);
   }
 }
 
 function handleKeyUp(keyEvent: KeyboardEvent) {
-  const dir = directions[keyEvent.key];
+  const dir = directions[keyEvent.code];
   const index = heldDirections.indexOf(dir);
   if (index > -1) {
     heldDirections.splice(index, 1);
