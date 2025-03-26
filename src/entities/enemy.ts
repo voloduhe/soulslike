@@ -1,4 +1,11 @@
-import { Application, Container, Graphics, Renderer, Text } from "pixi.js";
+import {
+  Application,
+  Container,
+  Graphics,
+  PointData,
+  Renderer,
+  Text,
+} from "pixi.js";
 import { isIntercects } from "../shared/is-intercets";
 import { Sword } from "./sword";
 import gsap from "gsap";
@@ -9,17 +16,17 @@ class Enemy extends Container {
   private app: Application<Renderer>;
   public color: number = 0xff0000;
   private direction: "right" | "left" = "right";
-  constructor(sword: Sword, app: Application<Renderer>) {
+  constructor(sword: Sword, app: Application<Renderer>, position?: PointData) {
     super();
     const graphics = new Graphics()
       .rect(0, 0, 100, 100)
       .stroke({ color: this.color, width: 2 });
 
-    this.position = { x: 100, y: 100 };
+    this.position = position ? position : { x: 100, y: 100 };
 
     this.graphics = graphics;
     const enemyName = new Text({
-      text: "НОРМИС",
+      text: "ENEMY",
       pivot: 0.5,
       style: {
         fill: this.color,
