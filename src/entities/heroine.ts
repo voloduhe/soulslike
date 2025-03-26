@@ -1,5 +1,12 @@
 import gsap from "gsap";
-import { Assets, Container, ContainerChild, DEG_TO_RAD, Sprite } from "pixi.js";
+import {
+  Assets,
+  Container,
+  ContainerChild,
+  DEG_TO_RAD,
+  Sprite,
+  Texture,
+} from "pixi.js";
 import { Sword } from "./sword";
 
 const texture = await Assets.load("../public/koke.png");
@@ -12,7 +19,7 @@ const directions: Record<KeyboardEvent["code"], DirType> = {
   KeyD: "right",
 };
 
-class Heroine extends Sprite {
+class Heroine extends Container {
   public hp: number;
   public stamina: number;
   public sword;
@@ -22,15 +29,16 @@ class Heroine extends Sprite {
   private stage: Container<ContainerChild>;
 
   constructor(stage: Container<ContainerChild>) {
-    super(texture);
+    super();
 
     this.hp = 100;
     this.stamina = 50;
     this.stage = stage;
 
     this.sword = new Sword(this.stage);
-
-    this.anchor.set(0.5);
+    const sprite = new Sprite(texture);
+    sprite.anchor.set(0.5);
+    this.addChild(sprite);
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);

@@ -1,32 +1,29 @@
+import { Enemy } from "./entities/enemy";
 import { Heroine } from "./entities/heroine";
-import { isIntercects } from "./shared/intercetrion";
 import "./style.css";
-import gsap from "gsap";
 
-import { Application, Graphics } from "pixi.js";
+import { Application } from "pixi.js";
 
 const app = new Application();
+(
+  globalThis as unknown as {
+    __PIXI_APP__: Application | undefined;
+  }
+).__PIXI_APP__ = app;
 
 await app.init({ background: "#000000", resizeTo: window });
 document.body.appendChild(app.canvas);
 
-const collider = new Graphics()
-  .rect(100, 100, 100, 100)
-  .stroke({ color: 0x00ff00, width: 2 });
-
 const heroine = new Heroine(app.stage);
+const enemy = new Enemy(heroine.sword, app);
 heroine.x = app.screen.width / 2;
 heroine.y = app.screen.height / 2;
 
-app.stage.addChild(heroine.sword, heroine, collider);
+app.stage.addChild(heroine.sword, heroine, enemy);
 
 app.ticker.add((time) => {
   heroine.movement(time.deltaTime);
 
-  if (isIntercects(heroine.sword, collider) && heroine.sword.isCollidable) {
-    collider.context.fill("white");
-    gsap.delayedCall(0.1, () => {
-      collider.context.clear();
-    });
-  }
+  enemy.intersection();
+  enemy.move(time.deltaTime);
 });
